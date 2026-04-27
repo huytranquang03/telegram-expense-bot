@@ -10,6 +10,16 @@ if (!BOT_TOKEN) {
 
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
+// Error handling for polling errors
+bot.on('polling_error', (error) => {
+  console.error('⚠️ Polling error:', error.code, error.message);
+});
+
+// General error handling
+bot.on('error', (error) => {
+  console.error('❌ Bot error:', error);
+});
+
 bot.setMyCommands([
   { command: '/menu', description: 'Mở menu quản lý chi tiêu' },
   { command: '/start', description: 'Khởi động lại bot' },
@@ -17,3 +27,4 @@ bot.setMyCommands([
 ]);
 
 module.exports = bot;
+

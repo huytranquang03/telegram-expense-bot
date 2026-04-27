@@ -21,13 +21,18 @@ function formatName(name) {
 
 /**
  * Parse a Vietnamese money string.
- * Supports: 150k, 1.5k, 150K, 150.000, 150,000
+ * Supports: 150k, 1.5k, 150K, 1.5M, 2M, 150.000, 150,000
  * Bare integers < 1000 are auto-multiplied by 1000.
  * @param {string} inputStr
  * @returns {number}
  */
 function parseMoney(inputStr) {
   let str = inputStr.toLowerCase().trim();
+
+  if (str.endsWith('m')) {
+    const num = parseFloat(str.slice(0, -1).replace(',', '.'));
+    return isNaN(num) ? 0 : num * 1000000;
+  }
 
   if (str.endsWith('k')) {
     const num = parseFloat(str.slice(0, -1).replace(',', '.'));
@@ -54,11 +59,17 @@ function parseNameList(inputStr) {
   const raw = inputStr.trim();
   if (!raw) return [];
   const parts = raw.includes(',') ? raw.split(',') : raw.split(/\s+/);
-  return parts.map(formatName).filter((n) => n.length > 0);
+  return parts
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0)
+    // Filter out parts that look like money (starts with digit or ends with k/m)
+    .filter((p) => !/^[0-9]/.test(p) && !p.toLowerCase().endsWith('k') && !p.toLowerCase().endsWith('m'))
+    .map(formatName);
 }
 
 /**
- * Parse custom split amounts like "Huy:100k An:150k Minh:50k"
+ * Parse custom split amounts like "Huy 100k An 150k Minh 50k"
+ * Format: Name Amount (space-separated, no colon needed)
  * @param {string} inputStr
  * @returns {Array<{name: string, amount: number}>}
  */
@@ -66,16 +77,26 @@ function parseCustomSplit(inputStr) {
   const raw = inputStr.trim();
   if (!raw) return [];
 
-  const parts = raw.includes(',') ? raw.split(',') : raw.split(/\s+/);
+  // Remove colons if they exist to normalize
+  const normalized = raw.replace(/:/g, ' ');
+  const parts = normalized.split(/\s+/);
   const result = [];
 
-  for (const part of parts) {
-    const match = part.match(/^(.+?):([0-9.,]+[kK]?)$/);
-    if (match) {
-      const name = formatName(match[1]);
-      const amount = parseMoney(match[2]);
-      if (name && amount > 0) {
-        result.push({ name, amount });
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    // Use parseMoney to check if it's an amount
+    // We only consider it an amount if it actually contains a number
+    const hasDigit = /[0-9]/.test(part);
+    const amount = hasDigit ? parseMoney(part) : 0;
+
+    if (amount > 0 && i > 0) {
+      const prevPart = parts[i - 1];
+      // Previous part must NOT be an amount itself
+      if (!/[0-9]/.test(prevPart)) {
+        const name = formatName(prevPart);
+        if (name) {
+          result.push({ name, amount });
+        }
       }
     }
   }
