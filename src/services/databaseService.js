@@ -1,4 +1,4 @@
-const Session = require('../models/Session');
+const Session = require("../models/Session");
 
 class DatabaseService {
   async getSession(chatId) {
@@ -6,7 +6,7 @@ class DatabaseService {
     if (!session) {
       session = await Session.create({
         chatId,
-        activeMode: 'quick',
+        activeMode: "quick",
         members_quick: [],
         members_detailed: [],
         expenses_quick: [],
@@ -29,7 +29,7 @@ class DatabaseService {
   }
 
   async addExpense(chatId, mode, expense) {
-    const field = mode === 'quick' ? 'expenses_quick' : 'expenses_detailed';
+    const field = mode === "quick" ? "expenses_quick" : "expenses_detailed";
     return await Session.findOneAndUpdate(
       { chatId },
       { $push: { [field]: expense } },
@@ -38,7 +38,7 @@ class DatabaseService {
   }
 
   async resetSession(chatId, mode) {
-    const updates = mode === 'quick'
+    const updates = mode === "quick"
       ? { expenses_quick: [], members_quick: [] }
       : { expenses_detailed: [], members_detailed: [] };
 

@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const expenseSchema = require('./Expense');
+const mongoose = require("mongoose");
+const expenseSchema = require("./Expense");
 
 const sessionSchema = new mongoose.Schema({
   chatId: { type: String, required: true, unique: true },
-  activeMode: { type: String, enum: ['quick', 'detailed'], default: 'quick' },
+  activeMode: { type: String, enum: ["quick", "detailed"], default: "quick" },
   members_quick: [{ type: String }],
   members_detailed: [{ type: String }],
   expenses_quick: [expenseSchema],
@@ -20,4 +20,4 @@ const sessionSchema = new mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('Session', sessionSchema);
+module.exports = mongoose.model("Session", sessionSchema);

@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const { getActiveMembers, getActiveExpenses } = require('./sessionService');
+const { getActiveMembers, getActiveExpenses } = require("./sessionService");
 
 /**
  * Calculate net balance per member (positive = owed money back, negative = owes money).

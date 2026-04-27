@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Format a number as Vietnamese currency string.
@@ -6,7 +6,7 @@
  * @returns {string}
  */
 function formatMoney(amount) {
-  return amount.toLocaleString('vi-VN') + ' đ';
+  return amount.toLocaleString("vi-VN") + " đ";
 }
 
 /**
@@ -15,7 +15,7 @@ function formatMoney(amount) {
  * @returns {string}
  */
 function formatName(name) {
-  if (!name) return '';
+  if (!name) return "";
   return name.trim().replace(/\p{L}/u, (ch) => ch.toUpperCase());
 }
 
@@ -29,22 +29,22 @@ function formatName(name) {
 function parseMoney(inputStr) {
   let str = inputStr.toLowerCase().trim();
 
-  if (str.endsWith('m')) {
-    const num = parseFloat(str.slice(0, -1).replace(',', '.'));
+  if (str.endsWith("m")) {
+    const num = parseFloat(str.slice(0, -1).replace(",", "."));
     return isNaN(num) ? 0 : num * 1000000;
   }
 
-  if (str.endsWith('k')) {
-    const num = parseFloat(str.slice(0, -1).replace(',', '.'));
+  if (str.endsWith("k")) {
+    const num = parseFloat(str.slice(0, -1).replace(",", "."));
     return isNaN(num) ? 0 : num * 1000;
   }
 
   const original = str;
-  str = str.replace(/[.,]/g, '').replace(/[^0-9]/g, '');
+  str = str.replace(/[.,]/g, "").replace(/[^0-9]/g, "");
   const num = parseFloat(str);
   if (isNaN(num)) return 0;
 
-  if (!original.includes('.') && !original.includes(',') && num > 0 && num < 1000) {
+  if (!original.includes(".") && !original.includes(",") && num > 0 && num < 1000) {
     return num * 1000;
   }
   return num;
@@ -58,12 +58,12 @@ function parseMoney(inputStr) {
 function parseNameList(inputStr) {
   const raw = inputStr.trim();
   if (!raw) return [];
-  const parts = raw.includes(',') ? raw.split(',') : raw.split(/\s+/);
+  const parts = raw.includes(",") ? raw.split(",") : raw.split(/\s+/);
   return parts
     .map((p) => p.trim())
     .filter((p) => p.length > 0)
     // Filter out parts that look like money (starts with digit or ends with k/m)
-    .filter((p) => !/^[0-9]/.test(p) && !p.toLowerCase().endsWith('k') && !p.toLowerCase().endsWith('m'))
+    .filter((p) => !/^[0-9]/.test(p) && !p.toLowerCase().endsWith("k") && !p.toLowerCase().endsWith("m"))
     .map(formatName);
 }
 
@@ -78,7 +78,7 @@ function parseCustomSplit(inputStr) {
   if (!raw) return [];
 
   // Remove colons if they exist to normalize
-  const normalized = raw.replace(/:/g, ' ');
+  const normalized = raw.replace(/:/g, " ");
   const parts = normalized.split(/\s+/);
   const result = [];
 

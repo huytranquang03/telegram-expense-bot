@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const { formatMoney } = require('../utils/formatters');
-const { calculateBalances, minimizeTransactions } = require('./expenseService');
-const { getActiveMembers, getActiveExpenses } = require('./sessionService');
+const { formatMoney } = require("../utils/formatters");
+const { calculateBalances, minimizeTransactions } = require("./expenseService");
+const { getActiveMembers, getActiveExpenses } = require("./sessionService");
 
 /**
  * Build the full debt summary message, or null if no expenses.
@@ -44,9 +44,9 @@ function buildResultsMessage(session) {
     }
   });
 
-  let msg = '📈 *TỔNG KẾT CÔNG NỢ*\n━━━━━━━━━━━━━━━━━━\n';
+  let msg = "📈 *TỔNG KẾT CÔNG NỢ*\n━━━━━━━━━━━━━━━━━━\n";
   msg += `*Tổng chi tiêu:* ${formatMoney(totalGroupExpense)}\n\n`;
-  msg += '■ *CHI TIẾT CÁ NHÂN*\n';
+  msg += "■ *CHI TIẾT CÁ NHÂN*\n";
 
   for (const [person, bal] of Object.entries(balances)) {
     const paid = totalPaid[person] || 0;
@@ -58,7 +58,7 @@ function buildResultsMessage(session) {
     const shares = itemizedShares[person] || [];
     if (shares.length > 0) {
       let totalConsumed = 0;
-      msg += '• Chi tiết sử dụng:\n';
+      msg += "• Chi tiết sử dụng:\n";
       shares.forEach((s) => {
         const r = Math.round(s.share * 100) / 100;
         totalConsumed += r;
@@ -66,17 +66,17 @@ function buildResultsMessage(session) {
       });
       msg += `  👉 Tổng dùng: *${formatMoney(totalConsumed)}*\n`;
     } else {
-      msg += '• Tổng dùng: 0 đ\n';
+      msg += "• Tổng dùng: 0 đ\n";
     }
 
     if (rounded > 0) msg += `• Trạng thái: NHẬN LẠI ${formatMoney(rounded)} 🟢\n\n`;
     else if (rounded < 0) msg += `• Trạng thái: CẦN ĐÓNG ${formatMoney(-rounded)} 🔴\n\n`;
-    else msg += '• Trạng thái: ĐÃ XONG ⚪️\n\n';
+    else msg += "• Trạng thái: ĐÃ XONG ⚪️\n\n";
   }
 
-  msg += '■ *HƯỚNG DẪN THANH TOÁN*\n';
+  msg += "■ *HƯỚNG DẪN THANH TOÁN*\n";
   if (transactions.length === 0) {
-    msg += 'Tất cả đã xong xuôi, không ai nợ ai! 🎉';
+    msg += "Tất cả đã xong xuôi, không ai nợ ai! 🎉";
   } else {
     transactions.forEach((t) => {
       msg += `[${t.from}] chuyển cho [${t.to}] ➔ *${formatMoney(t.amount)}*\n`;
@@ -96,25 +96,25 @@ function buildHistoryMessage(session) {
   const expenses = getActiveExpenses(session);
   if (expenses.length === 0) return null;
 
-  let msg = '🧾 *LỊCH SỬ GIAO DỊCH*\n━━━━━━━━━━━━━━━━━━\n';
+  let msg = "🧾 *LỊCH SỬ GIAO DỊCH*\n━━━━━━━━━━━━━━━━━━\n";
   let total = 0;
 
   expenses.forEach((exp, idx) => {
     const actual = exp.isSplitAll ? [...members] : exp.participants;
-    const splitText = exp.isSplitAll ? 'Cả nhóm' : actual.join(', ');
+    const splitText = exp.isSplitAll ? "Cả nhóm" : actual.join(", ");
     msg += `*#${idx + 1}. ${exp.description}*\n`;
     msg += `• Người chi: ${exp.payer}\n`;
     msg += `• Số tiền: ${formatMoney(exp.amount)}\n`;
 
     if (exp.customAmounts && exp.customAmounts.length > 0) {
-      msg += '• Chia tùy chỉnh:\n';
+      msg += "• Chia tùy chỉnh:\n";
       exp.customAmounts.forEach(({ name, amount }) => {
         msg += `  - ${name}: ${formatMoney(amount)}\n`;
       });
     } else {
       msg += `• Chia cho: ${splitText}\n`;
     }
-    msg += '\n';
+    msg += "\n";
     total += exp.amount;
   });
 

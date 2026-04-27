@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const connectDB = async () => {
   if (!process.env.MONGODB_URI) {
-    console.error('❌ MONGODB_URI is not set in environment variables.');
+    console.error("❌ MONGODB_URI is not set in environment variables.");
     process.exit(1);
   }
 
@@ -13,7 +13,7 @@ const connectDB = async () => {
     });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error.message);
+    console.error("❌ MongoDB connection error:", error.message);
     process.exit(1);
   }
 };

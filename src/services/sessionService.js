@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const db = require('./databaseService');
+const db = require("./databaseService");
 
 /**
  * Get or create a session for a chat.
@@ -26,7 +26,7 @@ async function saveData(session) {
  * @returns {string[]}
  */
 function getActiveMembers(session) {
-  return session.activeMode === 'quick' ? session.members_quick : session.members_detailed;
+  return session.activeMode === "quick" ? session.members_quick : session.members_detailed;
 }
 
 /**
@@ -35,7 +35,7 @@ function getActiveMembers(session) {
  * @returns {Array}
  */
 function getActiveExpenses(session) {
-  return session.activeMode === 'quick' ? session.expenses_quick : session.expenses_detailed;
+  return session.activeMode === "quick" ? session.expenses_quick : session.expenses_detailed;
 }
 
 module.exports = { getSession, saveData, getActiveMembers, getActiveExpenses };
